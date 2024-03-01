@@ -1,4 +1,5 @@
 import styles from "./Header.module.scss";
+import expImage from "./assets/export.png";
 
 function Header() {
 
@@ -31,7 +32,7 @@ function Header() {
             <h1 className={styles.title}>GTNH Notes</h1>
             <input type="text" className={styles.search} />
             <div className={styles.buttons}>
-                <img title="Export" onClick={onExport} className={["clickable" + " " + styles.export]} src="./assets/export.png" />
+                <img title="Export" onClick={onExport} className={["clickable" + " " + styles.export]} src={expImage} />
                 <div className={["clickable" + " " + styles.import]}>
                     <input title="Import" onChange={onImport} type="file" accept=".json" />
                 </div>
