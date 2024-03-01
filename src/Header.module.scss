@@ -1,0 +1,46 @@
+.header {
+    display: flex;
+    background-color: #2e2e2e;
+    justify-content: space-between;
+    width: 100%;
+    margin: auto;
+    align-items: center;
+    padding: 1rem 20% !important;
+    .buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+
+        * {
+            width: 32px;
+            height: 32px;
+        }
+
+        .import {
+            background-image: url(./assets/import.png);
+            background-size: cover;
+            input {
+                cursor: pointer;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+            }
+        }
+
+        .export {
+            height: 40px;
+            width: 38px;
+            position: relative;
+            transform: translateY(1px);
+        }
+    }
+    .title {
+        margin: 0;
+    }
+    .search {
+        border-radius: 10px;
+        width: 20rem;
+        padding: 1rem;
+    }
+}

@@ -1,0 +1,54 @@
+@import "./vars.scss";
+
+.note {
+    position: relative;
+    .noteTitle {
+        display: flex;
+        background-color: $main-color;
+        padding: 0 1rem;
+        cursor: pointer;
+        align-items: center;
+        height: 3rem;
+        transition: all 0.2s ease-in-out;
+        input {
+            background-color: transparent;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+        }
+        &:hover {
+            background-color: lighten($main-color, 10%);
+        }
+    }
+    .noteContent {
+        background-color: $ldark-color;
+        padding: 1rem;
+        height: calc(100% - 3rem);
+        cursor: pointer;
+        overflow: auto;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            background-color: lighten($ldark-color, 10%);
+        }
+    }
+    .remove {
+        position: absolute;
+        bottom: 1rem;
+        right: 1rem;
+        width: 48px;
+        height: 48px;
+        background-color: #ab6f6f;
+        border-radius: 40px;
+        opacity: 0;
+        transition: all 0.2s ease-in-out;
+        &:hover {
+            background-color: lighten(#ab6f6f, 10%);
+        }
+    }
+    &:hover {
+        .remove {
+            opacity: 1;
+        }
+    }
+}
