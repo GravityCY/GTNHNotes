@@ -3,7 +3,9 @@ import styles from "./Note.module.scss";
 import { marked } from "marked";
 import Editor from "@monaco-editor/react"
 
-function Note({ id, ogTitle = "Untitled", ogContent = "Write something!", onSaveCB, onDeleteCB}) {
+import { setFocus } from "./Global";
+
+function Note({ id, ogTitle = "Untitled", ogContent = "Write something!", onSaveCB, onDeleteCB, onReorderCB}) {
     const [title, setTitle] = useState(ogTitle);
     const [content, setContent] = useState(ogContent);
     const [isEditingTitle, setEditingTitle] = useState(false);
@@ -27,7 +29,8 @@ function Note({ id, ogTitle = "Untitled", ogContent = "Write something!", onSave
     }
 
     function onSubmitTitle() {
-        if (isEditingTitle) setTitle(getTitleValue());
+        if (isEditingTitle) {
+            setTitle(getTitleValue())};
         setEditingTitle(false);
     }
 
@@ -57,21 +60,19 @@ function Note({ id, ogTitle = "Untitled", ogContent = "Write something!", onSave
             inputRef.current.focus();
         }
         function onClickOutside(event) {
-            if (
-                noteRef.current === null ||
-                noteRef.current.contains(event.target)
-            )
-                return;
-            onSubmit();
-        }
-
-        function onUnmount() {
-            document.removeEventListener("mousedown", onClickOutside);
+            if (isEditingTitle && inputRef.current !== null && !inputRef.current.contains(event.target)) {
+                onSubmit();
+            }
+            if (isEditingContent && contentRef.current !== null && !contentRef.current.contains(event.target)) {
+                onSubmit();
+            }
         }
 
         document.addEventListener("mousedown", onClickOutside);
-        return onUnmount;
-    });
+        return () => {
+            document.removeEventListener("mousedown", onClickOutside);
+        };
+    }, [isEditingTitle, isEditingContent]);
 
     function Title() {
         function onKeyDown(e) {
@@ -114,7 +115,9 @@ function Note({ id, ogTitle = "Untitled", ogContent = "Write something!", onSave
     }
 
     return (
-        <div ref={noteRef} className={["noteShape" + " " + styles.note]}>
+        <div data-id={id}      
+        ref={noteRef} 
+        className={["noteShape" + " " + styles.note]}>
             <div
                 className={styles.noteTitle}
                 onClick={() => setEditingTitle(true)}

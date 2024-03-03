@@ -1,12 +1,20 @@
+import Calculator from "./Calculator";
 import Header from "./Header";
 import NoteContainer from "./NoteContainer";
 
-function App() {
+import { setFocus } from "./Global";
 
+document.addEventListener("mousedown", (e) => {
+    setFocus(e.target);
+});
+
+
+function App() {
   return (
     <>
         <Header/>
         <NoteContainer />
+        <Calculator />
     </>
   )
 }

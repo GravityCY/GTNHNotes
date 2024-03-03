@@ -3,10 +3,16 @@ import AddNote from "./AddNote";
 import Note from "./Note";
 import styles from "./NoteContainer.module.scss";
 
+import { DEBUG, generateUniqueId, traverse } from "./utils";
+
 class OrderedMap {
     constructor() {
         this.order = [];
         this.map = {};
+    }
+
+    size() {
+        return this.order.length;
     }
 
     serialize() {
@@ -34,6 +40,22 @@ class OrderedMap {
         return this.map[key];
     }
 
+    move(key, newIndex) {
+        const prevIndex = this.order.indexOf(key);
+        const high = newIndex > prevIndex;
+        let temp = this.order[newIndex];
+        this.order[newIndex] = key;
+        for (let i = high ? newIndex - 1 : newIndex + 1; high ? i >= prevIndex : i <= prevIndex; high ? i-- : i++) {
+            let prev = this.order[i];
+            this.order[i] = temp;
+            temp = prev;
+        }
+    }
+
+    index(key) {
+        return this.order.indexOf(key);
+    }
+
     all() {
         return this.order.map((key) => ({
             key,
@@ -57,18 +79,19 @@ class OrderedMap {
     }
 }
 
-function generateUniqueId() {
-    // Generate a random number and append it to the current timestamp
-    const randomPart = Math.random().toString(36).substr(2, 9); // Random alphanumeric string
-    const timestampPart = new Date().getTime().toString(36); // Current timestamp in base36
-    return `${timestampPart}-${randomPart}`;
-}
 
 function NoteContainer() {
     const [notes, setNotes] = useState(new OrderedMap());
 
     function saveNotes(data) {
         localStorage.setItem("notes", data.serialize());
+    }
+
+    function moveNote(id, to) {
+        const newNotes = notes.clone();
+        newNotes.move(id, to);
+        setNotes(newNotes);
+        saveNotes(newNotes);
     }
 
     function loadNotes() {
@@ -88,7 +111,7 @@ function NoteContainer() {
     }
 
     function saveNote(id, title, content) {
-        console.log(`Saving Note ${id} (${title})`);
+        DEBUG(`Saving Note ${id} (${title})`);
 
         const newNotes = notes.clone();
         newNotes.set(id, { title, content });
@@ -98,7 +121,7 @@ function NoteContainer() {
 
     function addNote(title, content) {
         const id = generateUniqueId();
-        console.log(`Adding Note ${id} (${title})`);
+        DEBUG(`Adding Note ${id} (${title})`);
 
         saveNote(id, title, content);
     }
@@ -106,6 +129,38 @@ function NoteContainer() {
     useEffect(() => {
         loadNotes();
     }, []);
+
+    useEffect(() => {
+
+        function onMouseMove(e) {
+            window.clientX = e.clientX;
+            window.clientY = e.clientY;
+        }
+
+        function onKeyDown(e) {
+            if (e.keyCode !== 37 && e.keyCode !== 39) return;
+            const element = document.elementFromPoint(window.clientX, window.clientY);
+            if (element == null) return;
+            const found = traverse(element, (element) => element && element.dataset.id);
+            const id = found.dataset.id;
+            const index = notes.index(id);
+            DEBUG(`Index of ${id}: ${index}`);
+            if (e.key === "ArrowLeft" && index !== 0) {
+                DEBUG(`Moving Note ${id} to ${index - 1}`);
+                moveNote(id, index - 1);
+            } else if (e.key === "ArrowRight" && index !== notes.size() - 1) {
+                DEBUG(`Moving Note ${id} to ${index + 1}`);
+                moveNote(id, index + 1);
+            }
+        }
+
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("keydown", onKeyDown)
+        return () => {
+            document.removeEventListener("keydown", onKeyDown);
+            document.removeEventListener("mousemove", onMouseMove);
+        }
+    }, [notes])
 
     function createNotes() {
         const notesJSX = [];
@@ -122,6 +177,7 @@ function NoteContainer() {
                     ogContent={value.content}
                     onSaveCB={saveNote}
                     onDeleteCB={removeNote}
+                    onReorderCB={moveNote}
                 />
             );
             notesJSX.push(note);

@@ -26,8 +26,9 @@ body {
 .noteShape {
     border-radius: 10px;
     overflow: hidden;
-    min-width: 500px;
+    min-width: 300px;
+    min-height: 300px;
     width: 25vw;
-    height: 400px;
+    height: 25vw;
     transition: all 0.2 ease-in-out;
 }

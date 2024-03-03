@@ -37,10 +37,13 @@
     }
     .title {
         margin: 0;
+        @media (max-width: 750px) {
+            display: none;
+        }
     }
     .search {
         border-radius: 10px;
-        width: 20rem;
+        width: 20vw;
         padding: 1rem;
     }
 }
