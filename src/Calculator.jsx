@@ -71,7 +71,7 @@ function Calculator() {
 
     return (
         <>
-            {show && <div ref={ref} className={styles.calculator}>
+            {<div ref={ref} className={styles.calculator + " " + (show ? styles.show : styles.hide)}>
                 <div>
                     <h1>{input}</h1>
                 </div>

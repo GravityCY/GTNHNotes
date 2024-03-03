@@ -4,15 +4,23 @@
     width: 25vw;
     height: 40vh;
     background-color: #070707;
-    bottom: 2.5rem;
-    right: 0;
+    bottom: 5rem;
+    &.show {
+        right: 0;
+        opacity: 1
+    }
+    
+    &.hide {
+        right: -25vw;
+        opacity: 0;
+    }
     &:focus {
         outline: none;
     }
     h1 {
         background-color: transparent;
-        font-size: 2rem;
-        min-height: 2.5rem;
+        font-size: 4rem;
+        min-height: 5rem;
         color: #fff;
     }
     .btn {
