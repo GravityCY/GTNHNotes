@@ -55,7 +55,7 @@ function Calculator() {
         }
 
         function onKey(e) {
-            if (e.keyCode == 67 && e.shiftKey) {
+            if (e.keyCode == 67 && e.altKey) {
                 setShow(!show);
             } else if (show && ref.current.contains(getFocus())) {
                 onCalc(e);
