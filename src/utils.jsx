@@ -1,4 +1,4 @@
-const IS_DEBUG = false;
+const IS_DEBUG = true;
 
 /**
  * Used to log to console only when is in debug mode

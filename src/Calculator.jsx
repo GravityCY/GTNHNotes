@@ -4,7 +4,7 @@ import "expr-eval";
 import { Parser } from "expr-eval";
 
 import { setFocus, getFocus } from "./Global";
-import { traverse } from "./utils"
+import { DEBUG } from "./utils"
 
 const parser = new Parser();
 
@@ -39,7 +39,7 @@ function Calculator() {
             const number = Number.parseInt(e.key);
             if (e.key === "Enter") {
                 setInput(parser.evaluate(input));
-            } else if (e.key === "Backspace") {
+            } else if (e.keyCode === "Backspace") {
                 setInput(input.slice(0, -1));
             } else if (e.key === "Escape") {
                 setInput("");
@@ -50,6 +50,7 @@ function Calculator() {
             } else {
                 return;
             }
+            DEBUG("Preventing default key for: " + e.key);
             e.preventDefault();
         }
 

@@ -3,8 +3,6 @@ import styles from "./Note.module.scss";
 import { marked } from "marked";
 import Editor from "@monaco-editor/react"
 
-import { setFocus } from "./Global";
-
 function Note({ id, ogTitle = "Untitled", ogContent = "Write something!", onSaveCB, onDeleteCB, onReorderCB}) {
     const [title, setTitle] = useState(ogTitle);
     const [content, setContent] = useState(ogContent);

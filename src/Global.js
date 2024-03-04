@@ -1,6 +1,7 @@
 let focus = null;
 
 export function setFocus(elem) {
+    elem.focus();
     focus = elem;
 }
 
