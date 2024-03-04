@@ -39,7 +39,7 @@ function Calculator() {
             const number = Number.parseInt(e.key);
             if (e.key === "Enter") {
                 setInput(parser.evaluate(input));
-            } else if (e.keyCode === "Backspace") {
+            } else if (e.key === "Backspace") {
                 setInput(input.slice(0, -1));
             } else if (e.key === "Escape") {
                 setInput("");
