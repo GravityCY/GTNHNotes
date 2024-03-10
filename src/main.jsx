@@ -1,9 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+
+import App from './App'
+
 import './main.scss'
 
-import { DEBUG } from './utils.jsx'
+import { DEBUG } from './utils.tsx'
 
 setInterval(() => {
     const current = localStorage.getItem("notes");

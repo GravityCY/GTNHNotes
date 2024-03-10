@@ -1,6 +1,8 @@
-import Calculator from "./Calculator";
-import Header from "./Header";
-import NoteContainer from "./NoteContainer";
+import React from "react";
+
+import Calculator from "./components/Calculator";
+import Header from "./components/Header";
+import NoteContainer from "./components/NoteContainer";
 
 import { setFocus } from "./Global";
 

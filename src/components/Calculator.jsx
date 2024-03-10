@@ -3,8 +3,8 @@ import styles from "./Calculator.module.scss";
 import "expr-eval";
 import { Parser } from "expr-eval";
 
-import { setFocus, getFocus } from "./Global";
-import { DEBUG } from "./utils"
+import { setFocus, getFocus } from "../Global";
+import { DEBUG } from "../utils"
 
 const parser = new Parser();
 
