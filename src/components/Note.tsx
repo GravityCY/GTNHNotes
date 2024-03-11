@@ -4,7 +4,7 @@ import Editor from "@monaco-editor/react";
 import * as NoteContainer from "./NoteContainer";
 
 import styles from "./Note.module.scss";
-import React from "react";
+import React, { useRef } from "react";
 
 import { editor } from "monaco-editor";
 
@@ -23,9 +23,11 @@ function Note({
     const [content, setContent] = React.useState(ogContent);
     const [isEditingTitle, setEditingTitle] = React.useState(false);
     const [isEditingContent, setEditingContent] = React.useState(false);
-    const [mouseXY, setMouseXY] = React.useState([0, 0]);
-    const [cmouseXY, setCMouseXY] = React.useState([0, 0]);
+    const [mouseXY, setMouseXY] = React.useState({ x: 0, y: 0 });
     const [isPickup, setPickup] = React.useState(false);
+
+    const cmouseXYRef = useRef({ x: 0, y: 0 });
+    const smouseYRef = useRef(0);
 
     const isMouseDownRef = React.useRef(false);
 
@@ -45,11 +47,15 @@ function Note({
         React.useRef(null);
 
     function getEditorValue() {
-        return editorRef.current === null || !isEditingContent ? content : editorRef.current?.getValue();
+        return editorRef.current === null || !isEditingContent
+            ? content
+            : editorRef.current?.getValue();
     }
 
     function getTitleValue() {
-        return inputRef.current === null || !isEditingTitle ? title : inputRef.current?.value;
+        return inputRef.current === null || !isEditingTitle
+            ? title
+            : inputRef.current?.value;
     }
 
     function onSubmitTitle() {
@@ -101,8 +107,9 @@ function Note({
                         return;
                     }
                     container.setPickup(id);
-                    setCMouseXY([event.x, event.y]);
-                    setMouseXY([0, 0]);
+                    smouseYRef.current = window.scrollY;
+                    cmouseXYRef.current = { x: event.x, y: event.y };
+                    setMouseXY({ x: 0, y: 0 });
                     setPickup(true);
                 }, 100);
             }
@@ -129,15 +136,24 @@ function Note({
             }
         }
 
-        function onMouseMove(event: MouseEvent) {
+        function onMouseMove(e: MouseEvent) {
             if (!isPickup) return;
-            setMouseXY([event.x - cmouseXY[0], event.y - cmouseXY[1]]);
+            setMouseXY({
+                x: e.pageX - cmouseXYRef.current.x,
+                y: e.pageY - cmouseXYRef.current.y,
+            });
         }
 
+        function onScroll() {
+            if (!isPickup) return;
+        }
+
+        document.addEventListener("scroll", onScroll);
         document.addEventListener("mouseup", onMouseUp);
         document.addEventListener("mousedown", onMouseDown);
         document.addEventListener("mousemove", onMouseMove);
         return () => {
+            document.removeEventListener("scroll", onScroll);
             document.removeEventListener("mouseup", onMouseUp);
             document.removeEventListener("mousedown", onMouseDown);
             document.removeEventListener("mousemove", onMouseMove);
@@ -147,6 +163,8 @@ function Note({
         isMouseDownRef.current,
         inputRef.current,
         titleRef.current,
+        mouseXY,
+        cmouseXYRef.current,
         isPickup,
         isEditingTitle,
         isEditingContent,
@@ -214,14 +232,14 @@ function Note({
                     "noteShape" + " " + styles.note + " " + styles.pickup
                 }
                 style={{
-                    transform: `translate3d(${mouseXY[0]}px, ${mouseXY[1]}px, 0)`
+                    transform: `translate3d(${mouseXY.x}px, ${mouseXY.y}px, 0)`,
                 }}
             >
                 <div ref={titleRef} className={styles.noteTitle}>
-                    <Title/>
+                    <Title />
                 </div>
                 <div ref={contentRef} className={styles.noteContent}>
-                    <Content/>
+                    <Content />
                 </div>
             </div>
         );
