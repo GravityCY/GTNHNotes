@@ -108,7 +108,7 @@ function Note({
                     }
                     container.setPickup(id);
                     smouseYRef.current = window.scrollY;
-                    cmouseXYRef.current = { x: event.x, y: event.y };
+                    cmouseXYRef.current = { x: event.pageX, y: event.pageY };
                     setMouseXY({ x: 0, y: 0 });
                     setPickup(true);
                 }, 100);
