@@ -1,7 +1,6 @@
 @import "/src/vars.scss";
 
 .note {
-    cursor: pointer;
     position: relative;
     transition: scale 0.25s ease-out, opacity 0.25s ease-out,
         box-shadow 0.25s ease-out;
@@ -60,10 +59,10 @@
     opacity: 0.5;
     scale: 1.05;
     box-shadow: 20px 0 50px black;
+    z-index: 99;
     &,
     * {
         pointer-events: none;
         user-select: none;
-        cursor: initial !important;
     }
 }

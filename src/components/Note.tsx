@@ -104,7 +104,7 @@ function Note({
                     setCMouseXY([event.x, event.y]);
                     setMouseXY([0, 0]);
                     setPickup(true);
-                }, 250);
+                }, 100);
             }
         }
 
@@ -214,8 +214,7 @@ function Note({
                     "noteShape" + " " + styles.note + " " + styles.pickup
                 }
                 style={{
-                    transform: `translate3d(${mouseXY[0]}px, ${mouseXY[1]}px, 0)`,
-                    pointerEvents: "none"
+                    transform: `translate3d(${mouseXY[0]}px, ${mouseXY[1]}px, 0)`
                 }}
             >
                 <div ref={titleRef} className={styles.noteTitle}>
@@ -229,21 +228,21 @@ function Note({
     }
 
     function onMouseEnter(event: React.MouseEvent) {
-        console.log("onMouseEnter");
         if (!container.hasPickup()) return;
         container.setHover(id);
     }
 
     function onMouseLeave(event: React.MouseEvent) {
-        console.log("onMouseLeave");
         if (!container.hasPickup()) return;
         container.setHover(null);
     }
 
     return (
         <div
+            draggable
             ref={noteRef}
             className={"noteShape" + " " + styles.note}
+            onDragStart={(e) => e.preventDefault()}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
         >

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { OrderedMap } from "../utils";
 
 import AddNote from "./AddNote";
@@ -19,11 +20,10 @@ export interface Props {
 };
 
 function NoteContainer() {
-    const [notes, setNotes]: [OrderedMap, (v: OrderedMap) => void] = React.useState(new OrderedMap());
+    const [notes, setNotes]: [OrderedMap, (v: OrderedMap) => void] = useState(new OrderedMap());
 
-    const pickupRef: React.MutableRefObject<string|null> = React.useRef(null);
-    const notesRef: React.MutableRefObject<HTMLElement[]> = React.useRef([]);
-    const mouseRef: React.MutableRefObject<[number, number]> = React.useRef([0, 0]);
+    const pickupRef: React.MutableRefObject<string|null> = useRef(null);
+    const hoverRef: React.MutableRefObject<string|null> = useRef(null);
 
     function saveNotes(data: OrderedMap) {
         localStorage.setItem("notes", data.serialize());
@@ -75,19 +75,8 @@ function NoteContainer() {
         saveNote(id, title, content);
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         loadNotes();
-    }, []);
-
-    React.useEffect(() => {
-        function onMouseMove(event: MouseEvent) {
-            mouseRef.current = [event.x, event.y];
-        }
-
-        document.addEventListener("mousemove", onMouseMove);
-        return () => {
-            document.removeEventListener("mousemove", onMouseMove);
-        }
     }, []);
 
     const props: Props = {
@@ -95,27 +84,28 @@ function NoteContainer() {
         removeNote,
         doMove() {
             if (pickupRef.current === null) return;
-            const point = document.elementFromPoint(mouseRef.current[0], mouseRef.current[1]);
-            if (point === null || point.getAttribute("id") === null) {
+            
+            if (hoverRef.current === null) {
                 pickupRef.current = null;
                 return;
             }
-            const id = point.getAttribute("id")!;
             console.log(`Moving note from ${pickupRef.current} to ${hoverRef.current}`);
-            moveNoteTo(pickupRef.current, id);
+            moveNoteTo(pickupRef.current, hoverRef.current);
             pickupRef.current = null;
+            hoverRef.current = null;
         },
         setPickup(v: string | null) {
             pickupRef.current = v;
         },
         setHover(v: string | null) {
             console.log("Hovering over " + v);
+            hoverRef.current = v;
         },
         hasPickup: function (): boolean {
             return pickupRef.current !== null;
         },
         hasHover: function (): boolean {
-            return false;
+            return hoverRef.current !== null;
         }
     };
 
@@ -129,7 +119,6 @@ function NoteContainer() {
             let note: any = (
                 <Note
                     key={key}
-                    ref={notesRef.current[i]}
                     id={key}
                     ogTitle={value.title}
                     ogContent={value.content}
