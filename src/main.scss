@@ -20,6 +20,10 @@ body {
     overflow-x: hidden;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 .noteShape {
     overflow: hidden;
     border-radius: 10px;

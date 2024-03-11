@@ -1,7 +1,7 @@
 import React from "react";
 
 import styles from "./Header.module.scss";
-import expImage from "/src/assets/export.png";
+import expImage from "../assets/export.png";
 
 function Header() {
 
