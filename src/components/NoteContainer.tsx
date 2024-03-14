@@ -116,7 +116,6 @@ function NoteContainer() {
                     container={props}
                 />
             );
-            DEBUG("NoteContainer", note.key);
             notesJSX.push(note);
         }
         return notesJSX;
@@ -131,3 +130,7 @@ function NoteContainer() {
 }
 
 export default NoteContainer;
+export function useNotes() {
+    throw new Error("Function not implemented.");
+}
+

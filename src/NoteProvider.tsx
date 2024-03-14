@@ -13,6 +13,7 @@ export function NoteProvider({ children }) {
     const [notes, setNotes]: [OrderedMap, (v: OrderedMap) => void] =
         React.useState(new OrderedMap());
 
+
     function loadNotes() {
         DEBUG("NoteProvider#loadNotes", "Loading Notes...");
         const data = localStorage.getItem("notes");
@@ -30,7 +31,7 @@ export function NoteProvider({ children }) {
     const ctx: NoteProps = {
         notes,
         setNotes,
-        loadNotes,
+        loadNotes
     };
 
     return (

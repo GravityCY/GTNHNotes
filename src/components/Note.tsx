@@ -1,12 +1,12 @@
-import { marked } from "marked";
-import Editor from "@monaco-editor/react";
+import * as Marked from "marked";
+import * as MonacoReact from "@monaco-editor/react";
 
 import * as NoteContainer from "./NoteContainer";
+import React from "react";
+import * as Monaco from "monaco-editor";
 
 import styles from "./Note.module.scss";
-import React, { useRef } from "react";
-
-import { editor } from "monaco-editor";
+import { DEBUG } from "../utils";
 
 function Note({
     id,
@@ -26,8 +26,8 @@ function Note({
     const [mouseXY, setMouseXY] = React.useState({ x: 0, y: 0 });
     const [isPickup, setPickup] = React.useState(false);
 
-    const cmouseXYRef = useRef({ x: 0, y: 0 });
-    const smouseYRef = useRef(0);
+    const cmouseXYRef = React.useRef({ x: 0, y: 0 });
+    const smouseYRef = React.useRef(0);
 
     const isMouseDownRef = React.useRef(false);
 
@@ -40,10 +40,10 @@ function Note({
     const contentRef: React.MutableRefObject<HTMLDivElement | null> =
         React.useRef(null);
 
-    // Editting
+    // Editing
     const inputRef: React.MutableRefObject<HTMLInputElement | null> =
         React.useRef(null);
-    const editorRef: React.MutableRefObject<editor.IStandaloneCodeEditor | null> =
+    const editorRef: React.MutableRefObject<Monaco.editor.IStandaloneCodeEditor | null> =
         React.useRef(null);
 
     function getEditorValue() {
@@ -88,11 +88,14 @@ function Note({
     }
 
     React.useEffect(() => {
+        
+    }, []);
+
+    React.useEffect(() => {
         if (inputRef.current !== null && isEditingTitle) {
             inputRef.current.focus();
         }
 
-        // TODO: Make it so that you start editing them when you mouse up, so that you can use mouse down to start checking after a certain amount of time to pickup the note.
         function onMouseDown(event: MouseEvent) {
             if (isEditingTitle || isEditingContent) {
                 if (noteRef.current == null) return;
@@ -200,7 +203,7 @@ function Note({
         if (isEditingContent) {
             return (
                 <>
-                    <Editor
+                    <MonacoReact.Editor
                         height="100%"
                         width="100%"
                         defaultLanguage="markdown"
@@ -214,7 +217,7 @@ function Note({
             return (
                 <div
                     className="no-defaults"
-                    dangerouslySetInnerHTML={{ __html: marked(content) }}
+                    dangerouslySetInnerHTML={{ __html: Marked.marked(content) }}
                 ></div>
             );
         }
