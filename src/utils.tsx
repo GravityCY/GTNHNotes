@@ -82,9 +82,9 @@ export class OrderedMap {
  * @param  {...any} arr 
  * @returns 
  */
-export function DEBUG(...arr) {
+export function DEBUG(name, ...arr) {
     if (!IS_DEBUG) return;
-    console.log(...arr);
+    console.log(`[${name}]`, ...arr);
 }
 
 export function generateUniqueId() {

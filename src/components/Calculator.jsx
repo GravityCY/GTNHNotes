@@ -21,13 +21,13 @@ function Calculator() {
     const nums = [];
     let x = 1;
     let y = 3;
-    nums.push(<p onClick={() => append("0")} style={{ gridRow: 4, gridColumnStart: 1, gridColumnEnd: 4 }} className={styles.btn}>0</p>);
+    nums.push(<p key="0" onClick={() => append("0")} style={{ gridRow: 4, gridColumnStart: 1, gridColumnEnd: 4 }} className={styles.btn}>0</p>);
     for (let i = 1; i < 10; i++) {
         if (i == 4 || i == 7) {
             y--;
             x = 1;
         }
-        const elem = <p onClick={() => append(i.toString())} style={{ gridColumn: x, gridRow: y }} className={styles.btn}>{i}</p>;
+        const elem = <p key={i} onClick={() => append(i.toString())} style={{ gridColumn: x, gridRow: y }} className={styles.btn}>{i}</p>;
         nums.push(elem);
         x++;
     }

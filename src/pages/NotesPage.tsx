@@ -7,8 +7,8 @@ import Calculator from "../components/Calculator";
 function NotesPage() {
     return (
         <>
-            <Header page="notes" />
             <NoteProvider>
+                <Header />
                 <NoteContainer />
             </NoteProvider>
             <Calculator />

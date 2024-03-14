@@ -1,10 +1,14 @@
 import React, { ChangeEvent } from "react";
+import { Link } from "react-router-dom";
 
 import styles from "./Header.module.scss";
 import expImage from "../assets/export.png";
-import { Link } from "react-router-dom";
+import impImage from "../assets/import.png";
+import * as NoteProvider from "../NoteProvider";
 
-function Header({ page }) {
+function Header() {
+    const noteContext = NoteProvider.useNotes();
+
     function onExport() {
         const jsonData = localStorage.getItem("notes");
         const blob = new Blob([jsonData as BlobPart], {
@@ -30,21 +34,28 @@ function Header({ page }) {
             const jsonData = event.target.result.toString();
             if (jsonData === null) return;
             localStorage.setItem("notes", jsonData);
+            noteContext.loadNotes();
         };
 
         reader.readAsText(file);
     }
 
-    function Buttons() {
-        return (
+    return (
+        <div className={styles.header}>
+            <Link to={"/GTNHNotes/"} className="link">
+                GTNH Notes
+            </Link>
             <div className={styles.buttons}>
-                <img
-                    title="Export"
+                <div
                     onClick={onExport}
-                    className={"clickable" + " " + styles.export}
-                    src={expImage}
-                />
-                <div className={"clickable" + " " + styles.import}>
+                    className={`clickable ${styles.expimp} ${styles.export}`}
+                    title="Export"
+                >
+                    <img src={expImage} />
+                </div>
+
+                <div title="Import" className={`clickable ${styles.expimp} ${styles.import}`}>
+                    <img src={impImage} />
                     <input
                         title="Import"
                         onChange={onImport}
@@ -53,18 +64,6 @@ function Header({ page }) {
                     />
                 </div>
             </div>
-        );
-    }
-
-    return (
-        <div className={styles.header}>
-            <Link to={"/GTNHNotes"} className="link">
-                GTNH Notes
-            </Link>
-            <Link to={"/GTNHNotes/tips"} className="link">
-                Tips
-            </Link>
-            {page === "notes" && Buttons()}
         </div>
     );
 }

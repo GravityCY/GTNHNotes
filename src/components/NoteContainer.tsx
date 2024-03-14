@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import { OrderedMap } from "../utils";
 
 import AddNote from "./AddNote";
@@ -8,23 +7,23 @@ import styles from "./NoteContainer.module.scss";
 
 import { DEBUG, generateUniqueId } from "../utils";
 import React from "react";
-import NoteContext from "../NoteProvider";
+import * as NoteProvider from "../NoteProvider";
 
 export interface Props {
-    saveNote: (id: string, title: string, content: string) => void
-    removeNote: (id: string) => void
-    doMove: () => void
-    setPickup: (id: string|null) => void
-    setHover: (id: string|null) => void
-    hasPickup: () => boolean
-    hasHover: () => boolean
-};
+    saveNote: (id: string, title: string, content: string) => void;
+    removeNote: (id: string) => void;
+    doMove: () => void;
+    setPickup: (id: string | null) => void;
+    setHover: (id: string | null) => void;
+    hasPickup: () => boolean;
+    hasHover: () => boolean;
+}
 
 function NoteContainer() {
-    const noteContext = React.useContext(NoteContext);
+    const noteContext = NoteProvider.useNotes();
 
-    const pickupRef: React.MutableRefObject<string|null> = useRef(null);
-    const hoverRef: React.MutableRefObject<string|null> = useRef(null);
+    const pickupRef: React.MutableRefObject<string | null> = React.useRef(null);
+    const hoverRef: React.MutableRefObject<string | null> = React.useRef(null);
 
     function saveNotes(data: OrderedMap) {
         localStorage.setItem("notes", data.serialize());
@@ -53,7 +52,7 @@ function NoteContainer() {
     }
 
     function saveNote(id: string, title: string, content: string) {
-        DEBUG(`Saving Note ${id} (${title})`);
+        DEBUG("NoteContainer#saveNote", `Saving Note ${id} (${title})`);
 
         const newNotes = noteContext.notes.clone();
         newNotes.set(id, { title, content });
@@ -63,7 +62,7 @@ function NoteContainer() {
 
     function addNote(title: string, content: string) {
         const id = generateUniqueId();
-        DEBUG(`Adding Note ${id} (${title})`);
+        DEBUG("NoteContainer#addNote", `Adding Note ${id} (${title})`);
 
         saveNote(id, title, content);
     }
@@ -73,12 +72,15 @@ function NoteContainer() {
         removeNote,
         doMove() {
             if (pickupRef.current === null) return;
-            
+
             if (hoverRef.current === null) {
                 pickupRef.current = null;
                 return;
             }
-            console.log(`Moving note from ${pickupRef.current} to ${hoverRef.current}`);
+            DEBUG(
+                "NoteContainer#doMove",
+                `Moving note from ${pickupRef.current} to ${hoverRef.current}`
+            );
             moveNoteTo(pickupRef.current, hoverRef.current);
             pickupRef.current = null;
             hoverRef.current = null;
@@ -87,7 +89,7 @@ function NoteContainer() {
             pickupRef.current = v;
         },
         setHover(v: string | null) {
-            console.log("Hovering over " + v);
+            DEBUG("NoteContainer#setHover", "Hovering over " + v);
             hoverRef.current = v;
         },
         hasPickup: function (): boolean {
@@ -95,7 +97,7 @@ function NoteContainer() {
         },
         hasHover: function (): boolean {
             return hoverRef.current !== null;
-        }
+        },
     };
 
     function createNotes() {
@@ -105,7 +107,7 @@ function NoteContainer() {
             const current = notesArray[i];
             const key = current.key;
             const value = current.value;
-            let note: any = (
+            let note: React.JSX.Element = (
                 <Note
                     key={key}
                     id={key}
@@ -114,6 +116,7 @@ function NoteContainer() {
                     container={props}
                 />
             );
+            DEBUG("NoteContainer", note.key);
             notesJSX.push(note);
         }
         return notesJSX;

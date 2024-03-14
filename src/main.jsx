@@ -17,10 +17,10 @@ setInterval(() => {
         backups = []; 
     }
     if (backups[backups.length - 1] === current) {
-        DEBUG("same");
+        DEBUG("main#setInterval", "Same");
         return;
     } else {
-        DEBUG("new")
+        DEBUG("main#setInterval", "new")
     }
 
     backups.push(current);
