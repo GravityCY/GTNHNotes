@@ -8,6 +8,7 @@ import styles from "./NoteContainer.module.scss";
 
 import { DEBUG, generateUniqueId } from "../utils";
 import React from "react";
+import NoteContext from "../NoteProvider";
 
 export interface Props {
     saveNote: (id: string, title: string, content: string) => void
@@ -20,7 +21,7 @@ export interface Props {
 };
 
 function NoteContainer() {
-    const [notes, setNotes]: [OrderedMap, (v: OrderedMap) => void] = useState(new OrderedMap());
+    const noteContext = React.useContext(NoteContext);
 
     const pickupRef: React.MutableRefObject<string|null> = useRef(null);
     const hoverRef: React.MutableRefObject<string|null> = useRef(null);
@@ -30,31 +31,23 @@ function NoteContainer() {
     }
 
     function moveNote(id: string, to: number) {
-        const newNotes = notes.clone();
+        const newNotes = noteContext.notes.clone();
         newNotes.move(id, to);
-        setNotes(newNotes);
+        noteContext.setNotes(newNotes);
         saveNotes(newNotes);
     }
 
     function moveNoteTo(id: string, to: string) {
-        const newNotes = notes.clone();
+        const newNotes = noteContext.notes.clone();
         newNotes.moveTo(id, to);
-        setNotes(newNotes);
+        noteContext.setNotes(newNotes);
         saveNotes(newNotes);
     }
 
-    function loadNotes() {
-        const data = localStorage.getItem("notes");
-        if (data == null) return;
-        const newNotes = new OrderedMap();
-        newNotes.deserialize(data);
-        setNotes(newNotes);
-    }
-
     function removeNote(id: string) {
-        const newNotes = notes.clone();
+        const newNotes = noteContext.notes.clone();
         newNotes.remove(id);
-        setNotes(newNotes);
+        noteContext.setNotes(newNotes);
 
         saveNotes(newNotes);
     }
@@ -62,9 +55,9 @@ function NoteContainer() {
     function saveNote(id: string, title: string, content: string) {
         DEBUG(`Saving Note ${id} (${title})`);
 
-        const newNotes = notes.clone();
+        const newNotes = noteContext.notes.clone();
         newNotes.set(id, { title, content });
-        setNotes(newNotes);
+        noteContext.setNotes(newNotes);
         saveNotes(newNotes);
     }
 
@@ -74,10 +67,6 @@ function NoteContainer() {
 
         saveNote(id, title, content);
     }
-
-    useEffect(() => {
-        loadNotes();
-    }, []);
 
     const props: Props = {
         saveNote,
@@ -111,7 +100,7 @@ function NoteContainer() {
 
     function createNotes() {
         const notesJSX: any[] = [];
-        const notesArray = notes.all();
+        const notesArray = noteContext.notes.all();
         for (let i = 0; i < notesArray.length; i++) {
             const current = notesArray[i];
             const key = current.key;

@@ -20,15 +20,7 @@ body {
     overflow-x: hidden;
 }
 
-.clickable {
-    cursor: pointer;
-}
-
-.noteShape {
-    overflow: hidden;
-    border-radius: 10px;
-    min-width: 300px;
-    min-height: 300px;
-    width: 25vw;
-    height: 25vw;
+a {
+    color: #fff;
+    text-decoration: none;
 }

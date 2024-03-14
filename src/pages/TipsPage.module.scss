@@ -1,0 +1,24 @@
+@import "/src/vars.scss";
+
+.tipContainer {
+    display: flex;
+    padding: 1rem;
+    gap: 3rem;
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+    .tip {
+        width: 30%;
+        overflow: hidden;
+        border-radius: 10px;
+        .title {
+            padding: 1rem;
+            background-color: $main-color;
+        }
+        .content {
+            background-color: $ldark-color;
+            height: calc(100% - 3rem);
+            padding: 1rem;
+        }
+    }
+}

@@ -1,3 +1,28 @@
 $main-color: #7c3535;
 $dark-color: #333;
 $ldark-color: #2e2e2e;
+
+.link {
+    display: block;
+    margin: 0 !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 2rem;
+    transition: all 0.25s ease-in-out;
+    border-radius: 5px;
+    &:hover {
+        background-color: #444;
+    }
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.noteShape {
+    overflow: hidden;
+    border-radius: 10px;
+    min-width: 300px;
+    min-height: 300px;
+    width: 25vw;
+    height: 25vw;
+}
